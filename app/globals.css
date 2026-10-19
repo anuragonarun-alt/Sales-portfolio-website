@@ -102,33 +102,93 @@ body {
     linear-gradient(var(--clr-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--clr-grid) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size);
-  /* Fade the grid out toward the edges */
-  -webkit-mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black 40%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black 40%,
-    transparent 100%
-  );
+  /* Uniform grid — no radial mask so it covers the full viewport */
 }
 
 /* ═══════════════════════════════════════════════
    HERO SECTION
+   hero-section  → full-width viewport shell
+   hero-layout   → centered max-width two-column grid
+   hero-content  → left column (all copy + CTAs)
+   hero-visual   → right column (abstract SVG)
 ═══════════════════════════════════════════════ */
+
+/* Shell: full viewport height, centres layout inside */
 .hero-section {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   min-height: 100dvh;
-  padding: var(--space-xl) clamp(1.5rem, 8vw, 8rem);
+  padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 5rem);
+}
+
+/* Inner layout: two equal columns on wide screens */
+.hero-layout {
+  width: 100%;
+  max-width: 1440px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+}
+
+/* Left column: stacked content with the existing gap rhythm */
+.hero-content {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-md);
-  max-width: 900px;
+  /* Allow content to breathe but cap so text doesn't stretch too wide */
+  max-width: 640px;
+}
+
+/* ── Right column: abstract SVG composition ── */
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  /* Let it grow to fill right half naturally */
+  max-width: 560px;
+  justify-self: center;
+  opacity: 0.65;
+}
+
+.hero-visual__svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Responsive: collapse to single column below 900px ── */
+@media (max-width: 900px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-visual {
+    display: none;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+}
+
+/* ── Mobile 390px ── */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 3rem 1.5rem;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .hero-layout {
+    max-width: 100%;
+  }
 }
 
 /* ── Metric ── */
